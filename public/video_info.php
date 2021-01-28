@@ -1,7 +1,7 @@
 <?php
 
-require('../../../autoload.php');
-//require('../vendor/autoload.php');
+//require('../../../autoload.php');
+require('../vendor/autoload.php');
 
 $url = isset($_GET['url']) ? $_GET['url'] : null;
 

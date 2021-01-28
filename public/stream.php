@@ -2,8 +2,8 @@
 
 set_time_limit(0);
 
-require('../../../autoload.php');
-//require('../vendor/autoload.php');
+//require('../../../autoload.php');
+require('../vendor/autoload.php');
 
 $url = isset($_GET['url']) ? $_GET['url'] : null;
 
