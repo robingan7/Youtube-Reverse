@@ -107,8 +107,7 @@ $(video).on('progress',function(){
 });
 
 $(video).on('timeupdate',function(){
-    //updateBuffer(true);
-    //console.log(buffers);
+    updateBuffer(true);
 });
 
 $(video_buffer).on('play',function(){
@@ -120,7 +119,7 @@ $(video_buffer).on('progress',function(){
 });
 
 $(video_buffer).on('timeupdate',function(){
-    //updateBuffer(false);
+    updateBuffer(false);
 });
 
 $(video_buffer).on('loadeddata',function(){
@@ -225,7 +224,7 @@ $("#speed2").click(function() {
 });
 $("#speed3").click(function() {
     clearInterval(intervalRewind);
-    video.playbackRate = 3.0;
+    video.playbackRate = 10.0;
     if (video.paused) video.play();
 });
 $("#speed-point5").click(function() {

@@ -17,10 +17,10 @@
         <script src="index.js" defer></script>
         <link rel= "stylesheet" type= "text/css" href= "style.css">
         <meta charset="UTF-8">
-        <link rel="icon" type="image/png" sizes="32x32" href="./img/logo-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="./img/logo-16x16.png">
-        <meta property="og:image" content="http://coronaware.net/img/logo-500x500.png" />
-        <meta property="og:image:secure_url" content="http://coronaware.net/img/logo-500x500.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/img/logo-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/img/logo-16x16.png">
+        <meta property="og:image" content="https://youtubereverse.herokuapp.com/img/logo-500x500.png" />
+        <meta property="og:image:secure_url" content="https://youtubereverse.herokuapp.com/img/logo-500x500.png" />
         <meta name="description" content="Youtube Reverse"/>
 
     </head>
@@ -45,7 +45,7 @@
             <div class="row flex">
                 <form style="width: 100%; margin-top: 2rem;">
                     <div class="col s12">
-                        <div class="input-field col s6" style="width: 100%; max-width: 700px;">
+                        <div class="input-field col s6" style="width: 100%; max-width: 700px; ">
                             <input type="text" value="https://www.youtube.com/watch?v=t_Ev6NQdE_U" id="txt_url" class="validate">
                             <label for="last_name">Put that link here</label>
                         <a class="waves-effect waves-light btn" id="btn_fetch">Submit</a>
@@ -53,10 +53,9 @@
                         </div>
                     </div>
                 </form>
-                            
               
 
-                <div style="width: 100%; max-width: 700px; padding-left: 20px; padding-right: 20px;">
+                <div style="width: 100%; max-width: 700px; height: 56.25%; max-height: 393.75px; padding-left: 20px; padding-right: 20px;">
                     <div class="progress" id="loader" style="display: none;">
                         <div class="indeterminate"></div>
                     </div>
@@ -84,11 +83,7 @@
                     </div>
                 </div>    
 
-                
-
-              
-                
-                <video id="bufferV" height="350" controls style="width: 100%; max-width: 700px; padding-left: 20px; padding-right: 20px; display: inline; margin-top: 100px;">
+                <video id="bufferV" height="350" controls style="width: 100%; max-width: 700px; height: 56.25%; max-height: 393.75px; padding-left: 20px; padding-right: 20px;">
                     <source src="" type="video/mp4"/>
                     <em>Sorry, your browser doesn't support HTML5 video.</em>
                 </video>
