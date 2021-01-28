@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>YouTube Reverse</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+   crossorigin=""></script>
+        <script src="index.js" defer></script>
+        <link rel= "stylesheet" type= "text/css" href= "style.css">
+        <meta charset="UTF-8">
+        <link rel="icon" type="image/png" sizes="32x32" href="./img/logo-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="./img/logo-16x16.png">
+        <meta property="og:image" content="http://coronaware.net/img/logo-500x500.png" />
+        <meta property="og:image:secure_url" content="http://coronaware.net/img/logo-500x500.png" />
+        <meta name="description" content="Youtube Reverse"/>
+
+    </head>
+    <body class="grey lighten-3">
+                
+        <nav class = "grey darken-4" style="padding-left: 32px;"><a href="/" class="brand-logo " style="font-size: 25px;">YT Reverse</a> 
+            <a href="#" data-target="sidenav-1" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
+        </nav>
+        <ul id="sidenav-1" class="sidenav sidenav-fixed blue-grey darken-4" style="width: 50%; min-width: 210px; max-width: 300px;">
+            <li><a class="waves-effect" href="/"><i class="material-icons">timeline</i>Stats</a></li>
+            <!--<li><a class="waves-effect" href="map"><i class="material-icons">map</i>Map</a></li>-->
+            <li><a class="waves-effect" href="what-to-know"><i class="material-icons">warning</i>What to Know</a></li>
+            <li><a class="waves-effect" href="news"><i class="material-icons">announcement</i>News</a></li>
+            <li><div class="divider"></div></li>
+            <li><a class="waves-effect" href="contact" ><i class="material-icons">email</i>Contact</a></li>
+            <li><a class="waves-effect" href="about"><i class="material-icons">info</i>About</a></li>
+        </ul>
+
+
+            <main>
+
+            <div class="row flex">
+                <form style="width: 100%; margin-top: 2rem;">
+                    <div class="col s12">
+                        <div class="input-field col s6" style="width: 100%; max-width: 700px;">
+                            <input type="text" value="https://www.youtube.com/watch?v=t_Ev6NQdE_U" id="txt_url" class="validate">
+                            <label for="last_name">Put that link here</label>
+                        <a class="waves-effect waves-light btn" id="btn_fetch">Submit</a>
+
+                        </div>
+                    </div>
+                </form>
+                            
+              
+
+                <div style="width: 100%; max-width: 700px; padding-left: 20px; padding-right: 20px;">
+                    <div class="progress" id="loader" style="display: none;">
+                        <div class="indeterminate"></div>
+                    </div>
+
+                    <video id="displayV" style="width: 100%; height: 100%;" controls>
+                        <source src="" type="video/mp4"/>
+                        <em>Sorry, your browser doesn't support HTML5 video.</em>
+                    </video>
+                   
+                    <div style="margin-top: -25px; padding: 0 18px;">
+                        <input type="range" />
+                    </div>
+                    <div style="width: 100%; display: flex;">
+                        <div style="margin: 0 auto; display: inline-block;position: relative;">
+                            <a class="waves-effect waves-light btn-small" id="speed-3">-3</a>
+                            <a class="waves-effect waves-light btn-small" id="speed-2">-2</a>
+                            <a class="waves-effect waves-light btn-small" id="speed-1">-1</a>
+                            <a class="waves-effect waves-light btn-small" id="speed-point5">-&frac12</a>
+                            <a class="waves-effect waves-light btn-small" id="speed0">0</a>
+                            <a class="waves-effect waves-light btn-small" id="speedpoint5">+&frac12</a>
+                            <a class="waves-effect waves-light btn-small" id="speed1">+1</a>
+                            <a class="waves-effect waves-light btn-small" id="speed2">+2</a>
+                            <a class="waves-effect waves-light btn-small" id="speed3">+3</a>
+                        </div>
+                    </div>
+                </div>    
+
+                
+
+              
+                
+                <video id="bufferV" height="350" controls style="width: 100%; max-width: 700px; padding-left: 20px; padding-right: 20px; display: inline; margin-top: 100px;">
+                    <source src="" type="video/mp4"/>
+                    <em>Sorry, your browser doesn't support HTML5 video.</em>
+                </video>
+
+
+            </div>
+
+        </main>
+        <footer class="page-footer grey darken-4">
+            <div class="footer-copyright">
+              <div class="container">
+                <p class="grey-text text-lighten-4 right" style="margin:0;">Created by Robin Gan</p>
+                <br/>
+              </div>
+            </div>
+          </footer>
+    </body>
+    
+</html>
