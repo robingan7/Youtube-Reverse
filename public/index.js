@@ -1,9 +1,3 @@
-/*<script>
-   
-</script>
-
-*/
-
 $(document).ready(function(){
     $('select').formSelect();
     $('.sidenav').sidenav(); 
@@ -49,10 +43,8 @@ $(function () {
             }
 
             var stream_url = 'stream.php?url=' + encodeURIComponent(first['url']);
-
+            loadBuffer(stream_url);
             $("#displayV").attr('src', stream_url);
-            $("#bufferV").attr('src', stream_url);
-            //$("#displayV").trigger('play');
         });
 
     });
@@ -60,9 +52,7 @@ $(function () {
 });
 
 var video = document.getElementById('displayV');
-var video_buffer = document.getElementById('bufferV');
 
-video_buffer.muted = true;
 var intervalRewind;
 
 var lastBufferCheck = Date.now();
@@ -70,11 +60,38 @@ var buffers = {
     display:[],
     bu: []
 };
-//var startSystemTime;
-//var startVideoTime;
+
+
+function loadBuffer(url) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.responseType = "arraybuffer";
+
+    xhr.onload = function(oEvent) {
+
+        var blob = new Blob([oEvent.target.response], {type: "video/mp4"});
+        
+        video.src = URL.createObjectURL(blob);
+        
+        //video.play()  if you want it to play on load
+    };
+    
+    xhr.onprogress = function(oEvent) {
+    
+        if (oEvent.lengthComputable) {
+            var percentComplete = oEvent.loaded/oEvent.total;
+            // do something with this
+            document.getElementById('percent').style.width = percentComplete * 100 + '%';
+        }
+    }
+
+    xhr.send();
+}
+
 $(video).on("loadeddata", function() {
     let loader = document.getElementById('loader');
     loader.style.display = "none";
+    video.play();
 });
 
 $(video).on("loadstart", function() {
@@ -85,45 +102,20 @@ $(video).on("loadstart", function() {
 });
 
 $(video).on('play',function(){
-    video.playbackRate = 1.0;
+    //video.playbackRate = 1.0;
     clearInterval(intervalRewind);
 });
 
 $(video).on('ended',function(){
     // this only happens when t=duration (not t==0)
-    video.playbackRate = 1.0;
+    //video.playbackRate = 1.0;
     video.currentTime = 0.0;
     clearInterval(intervalRewind);
 });
 
 $(video).on('pause',function(){
-    video.playbackRate = 1.0;
+    //video.playbackRate = 1.0;
     clearInterval(intervalRewind);
-});
-
-$(video).on('progress',function(){
-    updateBuffer(true);
-    //reverseBuffer();
-});
-
-$(video).on('timeupdate',function(){
-    updateBuffer(true);
-});
-
-$(video_buffer).on('play',function(){
-    video_buffer.playbackRate = 10.0;
-});
-
-$(video_buffer).on('progress',function(){
-    updateBuffer(false);
-});
-
-$(video_buffer).on('timeupdate',function(){
-    updateBuffer(false);
-});
-
-$(video_buffer).on('loadeddata',function(){
-    video.play();
 });
 
 
@@ -142,41 +134,6 @@ function rewind(rewindSpeed) {
            video.currentTime = Math.max(startVideoTime - elapsed*rewindSpeed/1000.0, 0);
        }
    }, 30);
-}
-
-function updateBuffer(isDisplay) {
-    let bufferr = document.getElementById(isDisplay ? 'displayV' : 'bufferV').buffered;
-    let updateB = [];
-    for (i = 0; i < bufferr.length; i++) {
-        updateB.push([bufferr.start(i),  bufferr.end(i)]);
-    }
-
-    if(isDisplay) {
-        buffers.display = updateB;
-    } else {
-        buffers.bu = updateB;
-    }
-}
-
-function startBuffer(sec) {
-    if(sec< 0) {
-        sec = 0;
-    }
-    let bV = document.getElementById('bufferV');
-
-    bV.currentTime = sec;
-    bV.play();
-}
-
-function reverseBuffer() {
-    if(Math.abs(lastBufferCheck - Date.now()) > 4000) {
-        let current = document.getElementById('displayV').currentTime;
-        if(!isInBuffer([current-4, current]) ) {
-            startBuffer(current-4);
-        }
-
-        lastBufferCheck = Date.now();
-    }
 }
 
 function isInBuffer(time) {
