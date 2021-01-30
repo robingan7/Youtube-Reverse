@@ -11,9 +11,7 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin=""/>
-        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-   crossorigin=""></script>
+        
         <script src="index.js" defer></script>
         <link rel= "stylesheet" type= "text/css" href= "style.css">
         <meta charset="UTF-8">
@@ -24,7 +22,7 @@
         <meta property="og:image" content="https://youtubereverse.herokuapp.com/img/logo-500x500.png" />
         <meta property="og:image:secure_url" content="https://youtubereverse.herokuapp.com/img/logo-500x500.png" />
         <meta name="description" content="Youtube Reverse"/>
-
+        
     </head>
     <body class="grey lighten-3">
                 
@@ -62,27 +60,39 @@
                         <div class="determinate" id="percent" style="width: 0%;"></div>
                     </div>
 
-                    <video id="displayV" style="width: 100%; height: 100%;" controls>
+                    <video id="displayV" style="width: 100%; height: 100%;">
                         <source src="" type="video/mp4"/>
                         <em>Sorry, your browser doesn't support HTML5 video.</em>
                     </video>
                    
-                    <div style="margin-top: -25px; padding: 0 18px;">
-                        <input type="range" />
+                    <div style="margin-top: -25px; padding: 0 -5px;">
+                        <input id="rangee" type="range" min="0" max="100" step="0.01" value='0'/>
                     </div>
+
                     <div style="width: 100%; display: flex;">
                         <div style="margin: 0 auto; display: inline-block;position: relative;">
                             <a class="waves-effect waves-light btn-small" id="speed-3">-3</a>
                             <a class="waves-effect waves-light btn-small" id="speed-2">-2</a>
                             <a class="waves-effect waves-light btn-small" id="speed-1">-1</a>
                             <a class="waves-effect waves-light btn-small" id="speed-point5">-&frac12</a>
-                            <a class="waves-effect waves-light btn-small" id="speed0">0</a>
+                            <a class="btn-floating btn-large waves-effect waves-light red" id='speed0'><i class="material-icons">rotate_left</i></a>
                             <a class="waves-effect waves-light btn-small" id="speedpoint5">+&frac12</a>
                             <a class="waves-effect waves-light btn-small" id="speed1">+1</a>
                             <a class="waves-effect waves-light btn-small" id="speed2">+2</a>
                             <a class="waves-effect waves-light btn-small" id="speed3">+3</a>
                         </div>
                     </div>
+
+                    <form action="#" style="padding: 0 10%;">
+                        <p class="range-field">
+                            <input type="range" id="test5" min="-4" max="4" step="0.1"/>
+                        <label for="email" style="font-weight: bold;">Speed: x-1</label>
+
+                        </p>
+
+                    </form>
+                            
+
                 </div>    
 
                 <!--<video id="bufferV" height="350" controls style="width: 100%; max-width: 700px; height: 56.25%; max-height: 393.75px; padding-left: 20px; padding-right: 20px;">

@@ -12,7 +12,8 @@ $(document).ready(function(){
 $(function () {
 
     $("#btn_fetch").click(function () {
-
+        let v = document.getElementById('displayV');
+        v.src = '';
         var url = $("#txt_url").val();
 
         var oThis = $(this);
@@ -44,7 +45,6 @@ $(function () {
 
             var stream_url = 'stream.php?url=' + encodeURIComponent(first['url']);
             loadBuffer(stream_url);
-            $("#displayV").attr('src', stream_url);
         });
 
     });
@@ -52,6 +52,7 @@ $(function () {
 });
 
 var video = document.getElementById('displayV');
+var ranger = document.getElementById('rangee');
 
 var intervalRewind;
 
@@ -73,7 +74,7 @@ function loadBuffer(url) {
         
         video.src = URL.createObjectURL(blob);
         
-        //video.play()  if you want it to play on load
+        video.play();
     };
     
     xhr.onprogress = function(oEvent) {
@@ -88,6 +89,33 @@ function loadBuffer(url) {
     xhr.send();
 }
 
+function setRangeData(data) {
+    let r = document.getElementById('rangee');
+    r.value = data;
+}
+
+$(ranger).on("input", function() {
+    var video = document.getElementById('displayV');
+    video.pause();
+});
+
+$(ranger).bind("mouseup touchend", function() {
+    var video = document.getElementById('displayV');
+    let r = document.getElementById('rangee');
+
+    video.currentTime = video.duration * (r.value / 100);
+    video.play();
+});
+
+$(ranger).click(function() {
+    var video = document.getElementById('displayV');
+    video.pause();
+    let r = document.getElementById('rangee');
+    console.log(r.value );
+    video.currentTime = video.duration * (r.value / 100);
+    video.play();
+});
+
 $(video).on("loadeddata", function() {
     let loader = document.getElementById('loader');
     loader.style.display = "none";
@@ -99,6 +127,7 @@ $(video).on("loadstart", function() {
     if(video.src != '') {
         loader.style.display = "block";
     }
+    setRangeData(0);
 });
 
 $(video).on('play',function(){
@@ -118,6 +147,11 @@ $(video).on('pause',function(){
     clearInterval(intervalRewind);
 });
 
+$(video).on('playing',function(){
+    let vi = document.getElementById('displayV');
+
+    setRangeData((vi.currentTime / vi.duration) * 100);
+});
 
 function rewind(rewindSpeed) {    
    clearInterval(intervalRewind);
