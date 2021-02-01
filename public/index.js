@@ -45,6 +45,7 @@ $(function () {
 
             var stream_url = 'stream.php?url=' + encodeURIComponent(first['url']);
             loadBuffer(stream_url);
+            icon.innerText = 'pause';
         });
 
     });
@@ -53,6 +54,7 @@ $(function () {
 
 var video = document.getElementById('displayV');
 var ranger = document.getElementById('rangee');
+var icon = document.getElementById('pIcon');
 
 var intervalRewind;
 
@@ -90,8 +92,7 @@ function loadBuffer(url) {
 }
 
 function setRangeData(data) {
-    let r = document.getElementById('rangee');
-    r.value = data;
+    ranger.value = data;
 }
 
 $(ranger).on("input", function() {
@@ -104,16 +105,17 @@ $(ranger).bind("mouseup touchend", function() {
     let r = document.getElementById('rangee');
 
     video.currentTime = video.duration * (r.value / 100);
-    video.play();
+    
+    ifPlay();
 });
 
-$(ranger).click(function() {
+$(ranger).bind("mousedown touchstart", function() {
     var video = document.getElementById('displayV');
     video.pause();
-    let r = document.getElementById('rangee');
-    console.log(r.value );
-    video.currentTime = video.duration * (r.value / 100);
-    video.play();
+    $( video ).off( "timeupdate");
+
+    video.currentTime = video.duration * (ranger.value / 100);
+    setTimeout(startRangeUpdate, 100);
 });
 
 $(video).on("loadeddata", function() {
@@ -147,11 +149,17 @@ $(video).on('pause',function(){
     clearInterval(intervalRewind);
 });
 
-$(video).on('playing',function(){
-    let vi = document.getElementById('displayV');
+function startRangeUpdate() {
+    $(video).on('timeupdate',function(){
+        let vi = document.getElementById('displayV');
+    
+        setRangeData((vi.currentTime / vi.duration) * 100);
 
-    setRangeData((vi.currentTime / vi.duration) * 100);
-});
+        console.log('asdas');
+    });    
+}
+
+startRangeUpdate();
 
 function rewind(rewindSpeed) {    
    clearInterval(intervalRewind);
@@ -159,10 +167,11 @@ function rewind(rewindSpeed) {
    var startVideoTime = video.currentTime;
    
    intervalRewind = setInterval(function(){
-       video.playbackRate = 1.0;
+       video.playbackRate = 0;
        if(video.currentTime == 0){
            clearInterval(intervalRewind);
            video.pause();
+           icon.innerText = 'play_arrow';
        } else {
            var elapsed = new Date().getTime()-startSystemTime;
            video.currentTime = Math.max(startVideoTime - elapsed*rewindSpeed/1000.0, 0);
@@ -170,28 +179,28 @@ function rewind(rewindSpeed) {
    }, 30);
 }
 
-function isInBuffer(time) {
-    for(let bu in buffers.display) {
-        if(time[1] <= bu[1] && time[0] >= bu[0]) {
-            return true;
-        }
-    }
-
-    for(let bu in buffers.bu) {
-        if(time[1] <= bu[1] && time[0] >= bu[0]) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 /**speed functions */
 $("#speed0").click(function() {
     clearInterval(intervalRewind);
     video.playbackRate = 1.0;
-    video.pause();
+
+    if(icon.innerText == 'play_arrow') {
+        video.play();
+        icon.innerText = 'pause';
+    } else {
+        icon.innerText = 'play_arrow';
+        video.pause();
+    }
 });
+
+function ifPlay() {
+    if(icon.innerText == 'play_arrow') {
+        video.pause();
+    } else {
+        video.play();
+    }
+}
+
 $("#speedpoint5").click(function() {
     clearInterval(intervalRewind);
     if (video.paused) video.play();
@@ -203,6 +212,7 @@ $("#speedpoint5").click(function() {
       console.log('delayed');
     }, 0);
 });
+
 $("#speed1").click(function() {
     clearInterval(intervalRewind);
     video.playbackRate = 1.0;
@@ -216,6 +226,7 @@ $("#speed2").click(function() {
 $("#speed3").click(function() {
     clearInterval(intervalRewind);
     video.playbackRate = 10.0;
+    video.muted = on;
     if (video.paused) video.play();
 });
 $("#speed-point5").click(function() {
