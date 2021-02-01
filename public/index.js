@@ -225,7 +225,7 @@ $("#speed2").click(function() {
 });
 $("#speed3").click(function() {
     clearInterval(intervalRewind);
-    video.playbackRate = 10.0;
+    video.playbackRate = 3.0;
     video.muted = on;
     if (video.paused) video.play();
 });
