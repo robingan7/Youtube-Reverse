@@ -54,7 +54,9 @@ $(function () {
 
 var video = document.getElementById('displayV');
 var ranger = document.getElementById('rangee');
+var chSpeed = document.getElementById('chSpeed');
 var icon = document.getElementById('pIcon');
+var speed = document.getElementById('speed');
 
 var intervalRewind;
 
@@ -95,6 +97,11 @@ function setRangeData(data) {
     ranger.value = data;
 }
 
+$(chSpeed).on("input", function() {
+    let val = chSpeed.value;
+    changeSpeed(chSpeed.value, true);
+});
+
 $(ranger).on("input", function() {
     var video = document.getElementById('displayV');
     video.pause();
@@ -105,15 +112,13 @@ $(ranger).bind("mouseup touchend", function() {
     let r = document.getElementById('rangee');
 
     video.currentTime = video.duration * (r.value / 100);
-    
     ifPlay();
 });
 
 $(ranger).bind("mousedown touchstart", function() {
     var video = document.getElementById('displayV');
-    video.pause();
+    //video.pause();
     $( video ).off( "timeupdate");
-
     video.currentTime = video.duration * (ranger.value / 100);
     setTimeout(startRangeUpdate, 100);
 });
@@ -154,8 +159,6 @@ function startRangeUpdate() {
         let vi = document.getElementById('displayV');
     
         setRangeData((vi.currentTime / vi.duration) * 100);
-
-        console.log('asdas');
     });    
 }
 
@@ -172,6 +175,7 @@ function rewind(rewindSpeed) {
            clearInterval(intervalRewind);
            video.pause();
            icon.innerText = 'play_arrow';
+           //video.currentTime = video.duration;
        } else {
            var elapsed = new Date().getTime()-startSystemTime;
            video.currentTime = Math.max(startVideoTime - elapsed*rewindSpeed/1000.0, 0);
@@ -181,16 +185,7 @@ function rewind(rewindSpeed) {
 
 /**speed functions */
 $("#speed0").click(function() {
-    clearInterval(intervalRewind);
-    video.playbackRate = 1.0;
-
-    if(icon.innerText == 'play_arrow') {
-        video.play();
-        icon.innerText = 'pause';
-    } else {
-        icon.innerText = 'play_arrow';
-        video.pause();
-    }
+    changeSpeed(0);
 });
 
 function ifPlay() {
@@ -202,43 +197,61 @@ function ifPlay() {
 }
 
 $("#speedpoint5").click(function() {
-    clearInterval(intervalRewind);
-    if (video.paused) video.play();
-    setTimeout(function() {
-      // Not sure why, but setting the playback to
-      // less than 1.0 only works when out of band
-      // or the video is already playing.
-      video.playbackRate = 0.25;
-      console.log('delayed');
-    }, 0);
+    changeSpeed(0.5);
 });
 
+function changeSpeed(val, isFromR=false) {
+    if(val > 0) {
+        if(val >=1) {
+            clearInterval(intervalRewind);
+            video.playbackRate = val;
+        } else {
+            clearInterval(intervalRewind);
+            setTimeout(function() {
+                video.playbackRate = val;
+                console.log('delayed');
+            }, 0);
+        }
+    } else if(val < 0) {
+        rewind(-val);
+    } else {
+        clearInterval(intervalRewind);
+
+        if(icon.innerText == 'play_arrow') {
+            video.play();
+            icon.innerText = 'pause';
+        } else {
+            icon.innerText = 'play_arrow';
+            video.pause();
+        }
+    }
+
+    if(val != 0) {
+        if(!isFromR) {
+            chSpeed.value = val;
+        }
+        speed.innerText = val;
+    }
+}
+
 $("#speed1").click(function() {
-    clearInterval(intervalRewind);
-    video.playbackRate = 1.0;
-    if (video.paused) video.play();
+    changeSpeed(1);
 });
 $("#speed2").click(function() {
-    clearInterval(intervalRewind);
-    video.playbackRate = 2.0;
-    if (video.paused) video.play();
+    changeSpeed(2);
 });
 $("#speed3").click(function() {
-    clearInterval(intervalRewind);
-    video.playbackRate = 3.0;
-    video.muted = on;
-    if (video.paused) video.play();
+    changeSpeed(3);
 });
 $("#speed-point5").click(function() {
-   rewind(0.5);
+    changeSpeed(-0.5);
 });
 $("#speed-1").click(function() {
-    console.log('aa');
-    rewind(1.0);
+    changeSpeed(-1);
 });
 $("#speed-2").click(function() {
-   rewind(2.0);
+    changeSpeed(-2);
 });
 $("#speed-3").click(function() {
-   rewind(3.0);
+    changeSpeed(-3);
 });

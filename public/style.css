@@ -163,5 +163,11 @@ nav {
     }
 }
 
+@media only screen and (max-width: 550px) {
+    .buttonPlus {
+      display: none;
+    }
+  }
+
 /*** iPhone and iOS Form Input Zoom Fixes ***/
 input, select { font-size: 100%; }
