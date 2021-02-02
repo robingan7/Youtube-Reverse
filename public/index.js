@@ -77,8 +77,13 @@ function loadBuffer(url) {
         var blob = new Blob([oEvent.target.response], {type: "video/mp4"});
         
         video.src = URL.createObjectURL(blob);
-        
-        video.play();
+        chSpeed.value = -1;
+        setTimeout(()=> {
+            console.log(video.duration)
+            video.currentTime = video.duration - 1;
+            playV();
+
+        }, 100);
     };
     
     xhr.onprogress = function(oEvent) {
@@ -98,7 +103,6 @@ function setRangeData(data) {
 }
 
 $(chSpeed).on("input", function() {
-    let val = chSpeed.value;
     changeSpeed(chSpeed.value, true);
 });
 
@@ -126,7 +130,7 @@ $(ranger).bind("mousedown touchstart", function() {
 $(video).on("loadeddata", function() {
     let loader = document.getElementById('loader');
     loader.style.display = "none";
-    video.play();
+    playV();
 });
 
 $(video).on("loadstart", function() {
@@ -162,25 +166,37 @@ function startRangeUpdate() {
     });    
 }
 
+function playV() {
+    let speedd = chSpeed.value;
+
+    if(speedd >= 0){
+        video.play();
+    } else {
+        icon.innerText = 'pause';
+        changeSpeed(speedd);
+    }
+}
+
 startRangeUpdate();
 
 function rewind(rewindSpeed) {    
-   clearInterval(intervalRewind);
-   var startSystemTime = new Date().getTime();
-   var startVideoTime = video.currentTime;
-   
-   intervalRewind = setInterval(function(){
-       video.playbackRate = 0;
-       if(video.currentTime == 0){
-           clearInterval(intervalRewind);
-           video.pause();
-           icon.innerText = 'play_arrow';
-           //video.currentTime = video.duration;
-       } else {
-           var elapsed = new Date().getTime()-startSystemTime;
-           video.currentTime = Math.max(startVideoTime - elapsed*rewindSpeed/1000.0, 0);
-       }
-   }, 30);
+    if(icon.innerText == 'pause') {
+        clearInterval(intervalRewind);
+        var startSystemTime = new Date().getTime();
+        var startVideoTime = video.currentTime;
+        
+        intervalRewind = setInterval(function(){
+            video.playbackRate = 0;
+            if(video.currentTime == 0){
+                clearInterval(intervalRewind);
+                video.pause();
+                icon.innerText = 'play_arrow';
+            } else {
+                var elapsed = new Date().getTime()-startSystemTime;
+                video.currentTime = Math.max(startVideoTime - elapsed*rewindSpeed/1000.0, 0);
+            }
+        }, 30);
+    }
 }
 
 /**speed functions */
@@ -192,7 +208,7 @@ function ifPlay() {
     if(icon.innerText == 'play_arrow') {
         video.pause();
     } else {
-        video.play();
+        playV();
     }
 }
 
@@ -212,17 +228,21 @@ function changeSpeed(val, isFromR=false) {
                 console.log('delayed');
             }, 0);
         }
+
+        ifPlay();
     } else if(val < 0) {
         rewind(-val);
     } else {
-        clearInterval(intervalRewind);
+        if(!isFromR) {
+            clearInterval(intervalRewind);
 
-        if(icon.innerText == 'play_arrow') {
-            video.play();
-            icon.innerText = 'pause';
-        } else {
-            icon.innerText = 'play_arrow';
-            video.pause();
+            if(icon.innerText == 'play_arrow') {
+                playV();
+                icon.innerText = 'pause';
+            } else {
+                icon.innerText = 'play_arrow';
+                video.pause();
+            }
         }
     }
 
@@ -232,6 +252,7 @@ function changeSpeed(val, isFromR=false) {
         }
         speed.innerText = val;
     }
+    
 }
 
 $("#speed1").click(function() {
