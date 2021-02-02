@@ -57,7 +57,8 @@ var ranger = document.getElementById('rangee');
 var chSpeed = document.getElementById('chSpeed');
 var icon = document.getElementById('pIcon');
 var speed = document.getElementById('speed');
-
+var audio = document.getElementById('audio');
+audio.volume = 0.4;
 var intervalRewind;
 
 var lastBufferCheck = Date.now();
@@ -107,8 +108,10 @@ $(chSpeed).on("input", function() {
 });
 
 $(ranger).on("input", function() {
+    clearInterval(intervalRewind);
     var video = document.getElementById('displayV');
     video.pause();
+    audio.pause();
 });
 
 $(ranger).bind("mouseup touchend", function() {
@@ -122,8 +125,10 @@ $(ranger).bind("mouseup touchend", function() {
 $(ranger).bind("mousedown touchstart", function() {
     var video = document.getElementById('displayV');
     //video.pause();
+                audio.pause();
     $( video ).off( "timeupdate");
     video.currentTime = video.duration * (ranger.value / 100);
+    clearInterval(intervalRewind);
     setTimeout(startRangeUpdate, 100);
 });
 
@@ -190,6 +195,7 @@ function rewind(rewindSpeed) {
             if(video.currentTime == 0){
                 clearInterval(intervalRewind);
                 video.pause();
+                audio.pause();
                 icon.innerText = 'play_arrow';
             } else {
                 var elapsed = new Date().getTime()-startSystemTime;
@@ -207,6 +213,7 @@ $("#speed0").click(function() {
 function ifPlay() {
     if(icon.innerText == 'play_arrow') {
         video.pause();
+        audio.pause();
     } else {
         playV();
     }
@@ -217,6 +224,14 @@ $("#speedpoint5").click(function() {
 });
 
 function changeSpeed(val, isFromR=false) {
+
+    if(val != 0) {
+        if(!isFromR) {
+            chSpeed.value = val;
+        }
+        speed.innerText = val;
+    }
+
     if(val > 0) {
         if(val >=1) {
             clearInterval(intervalRewind);
@@ -230,7 +245,9 @@ function changeSpeed(val, isFromR=false) {
         }
 
         ifPlay();
+        audio.pause();
     } else if(val < 0) {
+        audio.play();
         rewind(-val);
     } else {
         if(!isFromR) {
@@ -242,18 +259,13 @@ function changeSpeed(val, isFromR=false) {
             } else {
                 icon.innerText = 'play_arrow';
                 video.pause();
+                audio.pause();
             }
         }
     }
-
-    if(val != 0) {
-        if(!isFromR) {
-            chSpeed.value = val;
-        }
-        speed.innerText = val;
-    }
-    
 }
+
+
 
 $("#speed1").click(function() {
     changeSpeed(1);
