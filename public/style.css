@@ -171,3 +171,7 @@ nav {
 
 /*** iPhone and iOS Form Input Zoom Fixes ***/
 input, select { font-size: 100%; }
+
+.filpAll {
+    transform: scale(1, 1);
+}

@@ -186,6 +186,8 @@ startRangeUpdate();
 
 function rewind(rewindSpeed) {    
     if(icon.innerText == 'pause') {
+        audio.playbackRate = Math.abs(rewindSpeed);
+        audio.play();
         clearInterval(intervalRewind);
         var startSystemTime = new Date().getTime();
         var startVideoTime = video.currentTime;
@@ -211,7 +213,7 @@ $("#speed0").click(function() {
 });
 
 function ifPlay() {
-    if(icon.innerText == 'play_arrow') {
+    if(icon.innerText == 'play_arrow' || video.src == '') {
         video.pause();
         audio.pause();
     } else {
@@ -247,13 +249,12 @@ function changeSpeed(val, isFromR=false) {
         ifPlay();
         audio.pause();
     } else if(val < 0) {
-        audio.play();
         rewind(-val);
     } else {
         if(!isFromR) {
             clearInterval(intervalRewind);
 
-            if(icon.innerText == 'play_arrow') {
+            if(icon.innerText == 'play_arrow' && video.src != '') {
                 playV();
                 icon.innerText = 'pause';
             } else {
